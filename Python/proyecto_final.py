@@ -1,3 +1,5 @@
+import os  # importamos librería de sistema de python para poder limpiar pantalla con comando "CLEAN"
+
 print("*********************************************************")
 print("Bienvenidos al sistema de historias clinicas del Hospital")
 print("*********************************************************\n")
@@ -16,6 +18,10 @@ def show_menu():
     print("\t\t⚪  4- Salir")
     print("")
     response = input("INGRESE UNA OPCIÓN > ")
+
+    # limpiamos la pantalla cada vez que seleccionamos una opción
+    os.system('clear')
+
     return response
 
 
@@ -55,22 +61,37 @@ while running:
         elif num_res == 2:
             name = input("Ingrese el nombre del paciente: ")
 
+            finded = True
             # recorremos la lista database (donde se almacenan los pacientes)
             for x in range(len(database)):
 
-                # recorremos todos los pacientes obteniendo la Key y el Value
-                for k, v in database[x].items():
+                # Si el key es nombre y el valor (lo pasamos a minusculas para mejorar la busqueda) es el mismo que el nombre introducido para buscar
+                if database[x]["nombre"].lower() == name.lower():
+                    # encontrado ok y mostramos la historia clinica de este
+                    print("\nPaciente encontrado! | H. CLINICA: ",
+                          database[x]["historia"], "\n")
+                else:  # no encontrado!
+                    finded = False
+            if not finded:
+                print("Paciente no encontrado")
 
-                    # Si el key es nombre y el valor (lo pasamos a minusculas para mejorar la busqueda) es el mismo que el nombre introducido para buscar
-                    if k == "nombre" and v.lower() == name.lower():
-                        # encontrado ok y mostramos la historia clinica de este
-                        print("Paciente encontrado | H. CLINICA: ",
-                              database[x]["historia"])
-                    else:  # no encontrado!
-                        print("Paciente no encontrado")
         elif num_res == 3:
-            print("")
+            print("\n****************************")
+            print("*** LISTADO DE PACIENTES ***")
+            print("****************************\n")
+            for x in range(len(database)):
+                print("Nombre: ".ljust(10), database[x]["nombre"],  # rjust = tamaño detereminado de la columna
+                      "\t Historial Cli: ".ljust(10), database[x]["historia"])
+                print("\n")
+
         else:
-            print("")
+            # cortamos la ejecución del programa (del bucle While)
+            running = False
     else:
         print("")
+        print("ERROR!: ", msg)
+        print("")
+
+print("")
+print("Aplicación finalizada")
+print("")
